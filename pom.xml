@@ -21,5 +21,11 @@
             <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/net.coderazzi/tablefilter-swing -->
+        <dependency>
+            <groupId>net.coderazzi</groupId>
+            <artifactId>tablefilter-swing</artifactId>
+            <version>5.5.4</version>
+        </dependency>
     </dependencies>
 </project>
