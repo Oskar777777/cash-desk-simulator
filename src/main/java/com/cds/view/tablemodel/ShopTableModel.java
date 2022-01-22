@@ -2,6 +2,7 @@ package com.cds.view.tablemodel;
 
 import com.cds.model.CashDesk;
 import com.cds.view.tablemodel.enums.CashDeskTableColumn;
+import lombok.Setter;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -18,6 +19,11 @@ public class ShopTableModel extends AbstractTableModel {
 
     public void add(CashDesk cashDesk) {
         cashDesks.add(cashDesk);
+        this.fireTableDataChanged();
+    }
+
+    public void setCashDesks(List<CashDesk> cashDesks) {
+        this.cashDesks = cashDesks;
         this.fireTableDataChanged();
     }
 
@@ -50,7 +56,7 @@ public class ShopTableModel extends AbstractTableModel {
         CashDesk cashDesk = cashDesks.get(row);
         return switch (CashDeskTableColumn.getByIndex(column)) {
             case COL_NO -> cashDesk.getNumber();
-            case COL_NUMBER_OF_CLIENTS -> cashDesk.getClients().size();
+            case COL_NUMBER_OF_CLIENTS -> ""; //cashDesk.getClients().size();
             case COL_INFO -> "";
         };
     }
