@@ -37,7 +37,7 @@ public class CashDeskEvent extends Thread implements Observable {
                 long begin = System.currentTimeMillis();
                 log.info(String.format("[CashDesk] Client is being handled: %s",
                         shop.getClients().get(shop.getClients().size() - 1).getName()));
-                sleep(new Random().nextLong(100L)); // Client handle time
+                sleep(new Random().nextLong(3000L)); // Client handle time
                 long finish = System.currentTimeMillis();
 
                 log.info(String.format("[CashDesk] Elapsed time: %d", finish - begin));

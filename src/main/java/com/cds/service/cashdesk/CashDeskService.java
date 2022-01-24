@@ -11,6 +11,10 @@ public class CashDeskService {
     @Getter
     private List<CashDesk> cashDesks = new ArrayList<>();
 
+    public CashDeskService(List<CashDesk> cashDesks) {
+        this.cashDesks = cashDesks;
+    }
+
     public List<CashDesk> init() {
         int M = 5;
         for (int i = 0; i < M; i++)
@@ -22,7 +26,9 @@ public class CashDeskService {
     public CashDesk openFirstAvailableCashDesk() {
         CashDesk openedCashDesk = null;
         for (CashDesk cashDesk : cashDesks)
-            if (countOpenedCashDesks() <= 2 && CashDeskState.CLOSED.equals(cashDesk.getState())) {
+            if ((CashDeskState.CLOSED.equals(cashDesk.getState())
+                    || CashDeskState.TO_BE_CLOSED.equals(cashDesk.getState()))) { //TODO: added
+                //TODO: removed - countOpenedCashDesks() <= 2 &&
                 openedCashDesk = cashDesk;
                 cashDesk.setState(CashDeskState.OPEN);
             }

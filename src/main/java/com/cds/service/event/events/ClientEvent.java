@@ -36,11 +36,12 @@ public class ClientEvent extends Thread implements Observable {
     private void startSimulation() throws InterruptedException {
         while (true) {
             long begin = System.currentTimeMillis();
-            sleep(new Random().nextLong(1000L));
+            sleep(new Random().nextLong(2000L));
             long finish = System.currentTimeMillis();
 
             log.info(String.format("[Client] Elapsed time: %d", finish - begin));
             shop.getClients().add(Client.builder().name("Client no: " + (++clientNo)).build());
+            notifyObservers(); //TODO: added
 
             log.info(String.format("[Client] Clients: %d", shop.getClients().size()));
         }

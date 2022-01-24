@@ -12,12 +12,12 @@ import lombok.extern.java.Log;
 import java.util.Objects;
 
 @Log
-public class EventService {
+public class EventService extends Thread {
     // Service layer
     private ClientEvent clientEvent;
     private CashDeskEvent cashDeskEvent;
 
-    private CashDeskService cashDeskService = new CashDeskService();
+    private CashDeskService cashDeskService; // = new CashDeskService(); //TODO: added - TBC
 
     // Model layer
     @Getter
@@ -27,11 +27,17 @@ public class EventService {
     private int K = 3;
 
     public EventService() {
-        /* Client population handler */
         clientEvent = new ClientEvent(shop);
-
+        cashDeskService = new CashDeskService(shop.getCashDesks());
         init();
+    }
+
+    @Override
+    public void run() {
+        /* Client population handler */
         handleCashDesks();
+        runClientsSimulation();
+        runCashDeskSimulation();
     }
 
     private void init() {
@@ -44,31 +50,37 @@ public class EventService {
     //TODO: bug fixing
     private void handleCashDesks() {
         while(true) {
-            log.info("shop.getClients().size() > cashDeskService.countOpenedCashDesks() * K " + shop.getClients().size()
-                    + " " + cashDeskService.countOpenedCashDesks() * K);
+            // log.info("shop.getClients().size() > cashDeskService.countOpenedCashDesks() * K " + shop.getClients().size()
+            //         + " " + cashDeskService.countOpenedCashDesks() * K);
+             log.info("shop.getClients().size() > cashDeskService.countOpenedCashDesks() * K "
+                     + (shop.getClients().size() > cashDeskService.countOpenedCashDesks() * K));
             if (shop.getClients().size() > cashDeskService.countOpenedCashDesks() * K) {
                 CashDesk openedCashDesk = cashDeskService.openFirstAvailableCashDesk();
                 shop.setCashDesks(cashDeskService.getCashDesks());
                 if (Objects.nonNull(openedCashDesk)) { // if available
                     cashDeskEvent = new CashDeskEvent(shop, openedCashDesk.getNumber());
                     openedCashDesk.setCashDeskEvent(cashDeskEvent);
+                    log.info("OPENED " + openedCashDesk.getNumber());
                 }
             } else {
                 CashDesk closedCashDesk = cashDeskService.closeFirstOpenedCashDesk();
-                if (Objects.nonNull(closedCashDesk)) {
+                shop.setCashDesks(cashDeskService.getCashDesks()); //TODO: added
+                if (Objects.nonNull(closedCashDesk)
+                        && Objects.nonNull(closedCashDesk.getCashDeskEvent())) { // if event not exists
                     closedCashDesk.getCashDeskEvent().exit();
                     cashDeskService.closeCashDesk(closedCashDesk);
+                    log.info("CLOSED " + closedCashDesk.getNumber());
                 }
             }
         }
     }
 
     public void runClientsSimulation() {
-        clientEvent.start();
+        new Thread(clientEvent).start();
     }
 
     public void runCashDeskSimulation() {
-        cashDeskEvent.start();
+        new Thread(cashDeskEvent).start();
     }
 
     public void attach(Observer observer) {

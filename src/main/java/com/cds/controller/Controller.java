@@ -25,6 +25,7 @@ public class Controller implements Observer {
 
         dispatcher.runClientsSimulation();
         dispatcher.runCashDeskSimulation();
+        dispatcher.start();
         dispatcher.attach(this);
     }
 
