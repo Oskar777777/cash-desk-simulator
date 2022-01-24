@@ -1,5 +1,6 @@
 package com.cds.service.event;
 
+import com.cds.controller.util.SystemProperties;
 import com.cds.model.CashDesk;
 import com.cds.model.Shop;
 import com.cds.service.cashdesk.CashDeskService;
@@ -24,7 +25,7 @@ public class EventService extends Thread {
     /* shared resource between threads */
     private Shop shop = new Shop();
 
-    private int K = 3;
+    private int K = Integer.valueOf((String) SystemProperties.getConfig().get("app.params.k"));
 
     public EventService() {
         clientEvent = new ClientEvent(shop);

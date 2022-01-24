@@ -1,5 +1,6 @@
 package com.cds.controller;
 
+import com.cds.controller.util.SystemProperties;
 import com.cds.service.event.EventService;
 import com.cds.service.observer.Observer;
 import com.cds.view.MainForm;
@@ -19,6 +20,8 @@ public class Controller implements Observer {
     }
 
     private void initialize() {
+        SystemProperties.getInstance();
+
         mainForm = new MainForm();
         dispatcher = new EventService();
         mainForm.getFrame().setVisible(true);
